@@ -8,14 +8,26 @@
 
 config_version=4
 
-_global_script_classes=[  ]
+_global_script_classes=[ {
+"base": "KinematicBody2D",
+"class": "Block",
+"language": "GDScript",
+"path": "res://Scenes/Block.gd"
+}, {
+"base": "Block",
+"class": "Box",
+"language": "GDScript",
+"path": "res://Scenes/Box.gd"
+} ]
 _global_script_class_icons={
-
+"Block": "",
+"Box": ""
 }
 
 [application]
 
 config/name="Blix"
+run/main_scene="res://Scenes/Main.tscn"
 config/icon="res://icon.png"
 
 [input]

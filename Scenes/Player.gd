@@ -11,23 +11,23 @@ func _ready():
 	
 
 func _physics_process(delta):
-	var velocity = Vector2() # The player's movement vector
+	var direction = Vector2()
+	var velocity = Vector2()
+	
 	if Input.is_action_pressed("ui_right"):
-		velocity.x += 1
+		direction.x += 1
 	if Input.is_action_pressed("ui_left"):
-		velocity.x -= 1
+		direction.x -= 1
 	if Input.is_action_pressed("ui_up"):
-		velocity.y -= 1
+		direction.y -= 1
 	if Input.is_action_pressed("ui_down"):
-		velocity.y += 1
-		
-		
-	if velocity.length() > 0:
-		velocity = velocity.normalized() * speed
-	move_and_slide(velocity,Vector2())
+		direction.y += 1
+	if direction.length() > 0:
+		direction = direction.normalized()
+		velocity = direction * speed
+		move_and_slide(velocity,Vector2())
 	position.x = clamp(position.x, 0, screen_size.x)
 	position.y = clamp(position.y, 0, screen_size.y)
-	
 	if velocity.x != 0:
 		if velocity.x > 0:
 			$AnimationPlayer.current_animation = "SideWalk"
@@ -48,11 +48,15 @@ func _physics_process(delta):
 			$AnimationPlayer.current_animation = "DownStill"
 		elif current_anim == "UpWalk":
 			$AnimationPlayer.current_animation = "UpStill"
+	if get_slide_count() > 0:
+		check_box_collision(direction)
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 #func _process(delta):
 #	pass
+func check_box_collision(velocity : Vector2):
+	if abs(velocity.x) + abs(velocity.y) > 1:
+		return
+	var box = get_slide_collision(0).collider as Box
+	if box:
+		box.push(velocity)
 
-
-func _on_Block_collision():
-	emit_signal("pushing")
-	print("pushing")
