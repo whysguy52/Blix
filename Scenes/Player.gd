@@ -1,5 +1,6 @@
-extends Area2D
+extends KinematicBody2D
 
+signal pushing
 export var speed = 400 # How fast the player will move (pixels/sec)
 var screen_size # Size of the game window
 #var animation
@@ -9,7 +10,7 @@ func _ready():
 	screen_size = get_viewport_rect().size
 	
 
-func _process(delta):
+func _physics_process(delta):
 	var velocity = Vector2() # The player's movement vector
 	if Input.is_action_pressed("ui_right"):
 		velocity.x += 1
@@ -23,7 +24,7 @@ func _process(delta):
 		
 	if velocity.length() > 0:
 		velocity = velocity.normalized() * speed
-	position += velocity * delta
+	move_and_slide(velocity,Vector2())
 	position.x = clamp(position.x, 0, screen_size.x)
 	position.y = clamp(position.y, 0, screen_size.y)
 	
@@ -50,3 +51,8 @@ func _process(delta):
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 #func _process(delta):
 #	pass
+
+
+func _on_Block_collision():
+	emit_signal("pushing")
+	print("pushing")

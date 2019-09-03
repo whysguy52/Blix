@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/Blix.png-286e34c7b93831fe13d1777d01aab218.stex"
+path="res://.import/BlockMain.png-4c8a4faa9ba9beb07665b79fb0be1e60.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Player/art/Blix.png"
-dest_files=[ "res://.import/Blix.png-286e34c7b93831fe13d1777d01aab218.stex" ]
+source_file="res://Sprites/BlockMain/BlockMain.png"
+dest_files=[ "res://.import/BlockMain.png-4c8a4faa9ba9beb07665b79fb0be1e60.stex" ]
 
 [params]
 
