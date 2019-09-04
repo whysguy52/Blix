@@ -123,3 +123,8 @@ anims/SideStill = SubResource( 4 )
 anims/SideWalk = SubResource( 5 )
 anims/UpStill = SubResource( 6 )
 anims/UpWalk = SubResource( 7 )
+
+[node name="PushTimer" type="Timer" parent="."]
+wait_time = 0.5
+one_shot = true
+[connection signal="timeout" from="PushTimer" to="." method="_on_PushTimer_timeout"]

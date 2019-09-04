@@ -3,6 +3,8 @@ extends KinematicBody2D
 signal pushing
 export var speed = 400 # How fast the player will move (pixels/sec)
 var screen_size # Size of the game window
+var movement = true
+
 #var animation
 
 # Called when the node enters the scene tree for the first time.
@@ -14,6 +16,8 @@ func _physics_process(delta):
 	var direction = Vector2()
 	var velocity = Vector2()
 	
+	if movement == false:
+		return
 	if Input.is_action_pressed("ui_right"):
 		direction.x += 1
 	if Input.is_action_pressed("ui_left"):
@@ -60,3 +64,12 @@ func check_box_collision(velocity : Vector2):
 	if box:
 		box.push(velocity)
 
+
+
+func _on_Box_movementComplete():
+	movement = false
+	$PushTimer.start(0)
+
+
+func _on_PushTimer_timeout():
+	movement = true
