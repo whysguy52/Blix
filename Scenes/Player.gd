@@ -1,7 +1,7 @@
 extends KinematicBody2D
 
 signal pushing
-export var speed = 100 # How fast the player will move (pixels/sec)
+export var speed = 200 # How fast the player will move (pixels/sec)
 var screen_size # Size of the game window
 var movement = true
 var direction = Vector2()
@@ -12,32 +12,32 @@ var velocity = Vector2()
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	screen_size = get_viewport_rect().size
-	
+	position = position.floor()
 
-#pretty much does handles inputs to motion or action
-func _physics_process(delta):
+func controls_loop():
+	var LEFT 	= Input.is_action_pressed("ui_left")
+	var RIGHT 	= Input.is_action_pressed("ui_right")
+	var UP		= Input.is_action_pressed("ui_up")
+	var DOWN	= Input.is_action_pressed("ui_down")
 	
+	direction.x = -int(LEFT) + int(RIGHT)
+	direction.y = -int(UP) + int(DOWN)
+	
+func movement_loop():
+	velocity = direction.normalized() * speed
+	move_and_slide(velocity, Vector2())
+	if get_slide_count() > 0:
+		check_box_collision(velocity)
+
+
+func _physics_process(delta):
 	#if auto-moving
 	if movement == false:
-		movePlayer(velocity)
+		movement_loop()
 		animatePlayer(velocity)
 		return
-	else: #calculate movement vectors
-		direction = Vector2()   #reset direction
-		velocity = Vector2()    #reset velocity
-	#check user input
-	if Input.is_action_pressed("ui_right"):
-		direction.x += 1
-	if Input.is_action_pressed("ui_left"):
-		direction.x -= 1
-	if Input.is_action_pressed("ui_up"):
-		direction.y -= 1
-	if Input.is_action_pressed("ui_down"):
-		direction.y += 1
-	if direction.length() > 0:
-		direction = direction.normalized()
-		velocity = direction * speed
-		movePlayer(velocity)
+	controls_loop()
+	movement_loop()
 	animatePlayer(velocity) #Must be called. will animate or even STOP animation.
 
 #Moves the player. Used by multiple methods
@@ -46,8 +46,7 @@ func movePlayer( velocity : Vector2):
 	position.x = clamp(position.x, 0, screen_size.x)
 	position.y = clamp(position.y, 0, screen_size.y)
 	
-	if get_slide_count() > 0:
-		check_box_collision(velocity)
+	
 
 func animatePlayer(velocity : Vector2):
 	if velocity.x != 0:
