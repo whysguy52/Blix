@@ -29,4 +29,5 @@ func push(velocity:Vector2):
 	position.x = clamp(position.x, 16, screen_size.x - 16)
 	position.y = clamp(position.y, 16, screen_size.y - 16)
 	
-	
+func getSpeed():
+	return speed

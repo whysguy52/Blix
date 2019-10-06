@@ -4,6 +4,9 @@ export var speed = 200 # How fast the player will move (pixels/sec)
 var screen_size # Size of the game window
 var direction = Vector2()
 var velocity = Vector2()
+var grab = false
+var lock = false
+var lastBox : Box
 
 #var animation
 
@@ -23,6 +26,7 @@ func controls_loop():
 	var RIGHT 	= Input.is_action_pressed("ui_right")
 	var UP		= Input.is_action_pressed("ui_up")
 	var DOWN	= Input.is_action_pressed("ui_down")
+	grab	= Input.is_action_pressed("ui_select")
 	
 	direction.x = -int(LEFT) + int(RIGHT)
 	direction.y = -int(UP) + int(DOWN)
@@ -33,7 +37,14 @@ func movement_loop():
 	move_and_slide(velocity, Vector2())
 	position.x = clamp(position.x, 16, screen_size.x - 16)
 	position.y = clamp(position.y, 16, screen_size.y - 16)
-	if get_slide_count() > 0:
+	
+	if lock == true:
+		lastBox.push(velocity)
+		
+		if !grab:
+			lock = false
+			speed = 200
+	elif get_slide_count() > 0:
 		check_box_collision(velocity)
 	
 func animatePlayer(velocity : Vector2):
@@ -57,13 +68,15 @@ func animatePlayer(velocity : Vector2):
 			$AnimationPlayer.current_animation = "DownStill"
 		elif current_anim == "UpWalk":
 			$AnimationPlayer.current_animation = "UpStill"
-	
 
 func check_box_collision(velocity : Vector2):
 	if abs(direction.x) + abs(direction.y) > 1:
 		return
 	var box = get_slide_collision(0).collider as Box
+	lastBox = box
 	if box:
+		if grab:
+			lock = true
+			speed = box.getSpeed()
+			
 		box.push(velocity)
-		print( "Collision With Box")
-		
