@@ -25,7 +25,7 @@ func controls_loop():
 	
 func movement_loop():
 	velocity = direction.normalized() * speed
-	move_and_slide(velocity, Vector2())
+	movePlayer(velocity)
 	if get_slide_count() > 0:
 		check_box_collision(velocity)
 
@@ -42,9 +42,9 @@ func _physics_process(delta):
 
 #Moves the player. Used by multiple methods
 func movePlayer( velocity : Vector2):
-	move_and_slide(velocity,Vector2())
-	position.x = clamp(position.x, 0, screen_size.x)
-	position.y = clamp(position.y, 0, screen_size.y)
+	move_and_slide(velocity, Vector2())
+	position.x = clamp(position.x, 16, screen_size.x - 16)
+	position.y = clamp(position.y, 16, screen_size.y - 16)
 	
 	
 

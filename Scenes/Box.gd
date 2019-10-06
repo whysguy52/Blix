@@ -40,8 +40,8 @@ func push(velocity:Vector2):
 	direction = velocity.normalized()
 	move_and_slide(direction * speed, Vector2())
 	
-	position.x = clamp(position.x, 0, screen_size.x)
-	position.y = clamp(position.y, 0, screen_size.y)
+	position.x = clamp(position.x, 16, screen_size.x - 16)
+	position.y = clamp(position.y, 16, screen_size.y - 16)
 	
 	displacement = position.distance_to(initialPosition)
 	

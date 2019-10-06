@@ -6,8 +6,8 @@
 [node name="Main" type="Node"]
 
 [node name="Player" parent="." instance=ExtResource( 1 )]
-position = Vector2( 130, 74.5918 )
+position = Vector2( 128, 128 )
 
 [node name="Box" parent="." instance=ExtResource( 2 )]
-position = Vector2( 90, 80 )
+position = Vector2( 96, 96 )
 [connection signal="movementComplete" from="Box" to="Player" method="_on_Box_movementComplete"]
