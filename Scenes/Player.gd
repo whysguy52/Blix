@@ -1,9 +1,7 @@
 extends KinematicBody2D
 
-signal pushing
 export var speed = 200 # How fast the player will move (pixels/sec)
 var screen_size # Size of the game window
-var movement = true
 var direction = Vector2()
 var velocity = Vector2()
 
@@ -13,6 +11,12 @@ var velocity = Vector2()
 func _ready():
 	screen_size = get_viewport_rect().size
 	position = position.floor()
+
+# warning-ignore:unused_argument
+func _physics_process(delta):
+	controls_loop()
+	movement_loop()
+	animatePlayer(velocity) #Must be called. will animate or even STOP animation.
 
 func controls_loop():
 	var LEFT 	= Input.is_action_pressed("ui_left")
@@ -25,29 +29,13 @@ func controls_loop():
 	
 func movement_loop():
 	velocity = direction.normalized() * speed
-	movePlayer(velocity)
-	if get_slide_count() > 0:
-		check_box_collision(velocity)
-
-
-func _physics_process(delta):
-	#if auto-moving
-	if movement == false:
-		movement_loop()
-		animatePlayer(velocity)
-		return
-	controls_loop()
-	movement_loop()
-	animatePlayer(velocity) #Must be called. will animate or even STOP animation.
-
-#Moves the player. Used by multiple methods
-func movePlayer( velocity : Vector2):
+# warning-ignore:return_value_discarded
 	move_and_slide(velocity, Vector2())
 	position.x = clamp(position.x, 16, screen_size.x - 16)
 	position.y = clamp(position.y, 16, screen_size.y - 16)
+	if get_slide_count() > 0:
+		check_box_collision(velocity)
 	
-	
-
 func animatePlayer(velocity : Vector2):
 	if velocity.x != 0:
 		if velocity.x > 0:
@@ -76,16 +64,6 @@ func check_box_collision(velocity : Vector2):
 		return
 	var box = get_slide_collision(0).collider as Box
 	if box:
-		movement = false
 		box.push(velocity)
+		print( "Collision With Box")
 		
-
-func _on_Box_movementComplete():
-	movement = false
-	velocity = Vector2(0,0)
-	animatePlayer(velocity)
-	$PushTimer.start(0)
-
-
-func _on_PushTimer_timeout():
-	movement = true
